@@ -3,8 +3,10 @@ import Die from "./components/Die";
 import { nanoid } from "nanoid";
 
 export default function App() {
-  const [dice, setDice] = React.useState(randomDice());
+  const [dice, setDice] = React.useState(allNewDice());
+  const [tenzies, setTenzies] = React.useState(false);
 
+  // generates 1 random die
   function generateDie() {
     return {
       value: Math.ceil(Math.random() * 6),
@@ -13,7 +15,8 @@ export default function App() {
     };
   }
 
-  function randomDice() {
+  // returns an array of dice that will initialize the dice state
+  function allNewDice() {
     const arrayOfDice = [];
     for (let i = 0; i < 10; i++) {
       arrayOfDice.push(generateDie());
@@ -22,22 +25,34 @@ export default function App() {
   }
 
   function rollDice() {
-    setDice((oldDice) =>
-      oldDice.map((die) => (die.isHeld ? die : generateDie()))
-    );
+    setDice((oldDice) => {
+      // starts a new game if tenzies state is true (all the dice have the same value and are held)
+      if (tenzies) {
+        setTenzies(false);
+        return allNewDice();
+        // only rolls the dice which are not held
+      } else {
+        return oldDice.map((die) => (die.isHeld ? die : generateDie()));
+      }
+    });
   }
 
   function holdDie(id) {
     setDice((oldDice) =>
       oldDice.map((die) => {
-        if (die.id === id) {
-          return { ...die, isHeld: !die.isHeld };
-        } else {
-          return die;
-        }
+        // hold the die if the id of the die we are in our array is the same as the one the user clicks
+        return die.id === id ? { ...die, isHeld: !die.isHeld } : die;
       })
     );
   }
+
+  // 2 states in sync require the useEffect hook
+  React.useEffect(() => {
+    // check if all the dice are held and have the same value
+    if (dice.every((die) => die.isHeld && die.value === dice[0].value)) {
+      return setTenzies(true);
+    }
+  }, [dice]);
 
   const diceElements = dice.map((die) => {
     return (
@@ -58,7 +73,7 @@ export default function App() {
         current value between rolls.
       </p>
       <div className="dice-container">{diceElements}</div>
-      <button onClick={rollDice}>Roll</button>
+      <button onClick={rollDice}>{tenzies ? "New Game" : "Roll"}</button>
     </div>
   );
 }
