@@ -13,7 +13,9 @@ export default function App() {
     return arrayOfDice;
   }
 
-  console.log(dice);
+  function rollDice() {
+    setDice(randomDice());
+  }
 
   return (
     <div className="container">
@@ -23,7 +25,7 @@ export default function App() {
         current value between rolls.
       </p>
       <Die dice={dice} />
-      <button>Roll</button>
+      <button onClick={rollDice}>Roll</button>
     </div>
   );
 }
