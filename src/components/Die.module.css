@@ -1,15 +1,9 @@
-.diceContainer {
-  display: grid;
-  grid-template: auto auto / repeat(5, 1fr);
-  text-align: center;
-  gap: 20px;
-}
-
 .dieFace {
-  background: white;
-  margin: 0;
   width: 50px;
   height: 50px;
-  line-height: 50px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }

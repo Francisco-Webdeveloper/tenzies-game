@@ -41,6 +41,13 @@ body {
   color: #4a4e74;
 }
 
+.dice-container {
+  display: grid;
+  grid-template: auto auto / repeat(5, 1fr);
+  text-align: center;
+  gap: 20px;
+}
+
 button {
   margin-top: 30px;
   width: 92px;
