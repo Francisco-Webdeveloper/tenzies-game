@@ -6,6 +6,7 @@ import Confetti from "react-confetti";
 export default function App() {
   const [dice, setDice] = React.useState(allNewDice());
   const [tenzies, setTenzies] = React.useState(false);
+  const [attempts, setAttempts] = React.useState(0);
 
   // generates 1 random die
   function generateDie() {
@@ -30,13 +31,18 @@ export default function App() {
       // starts a new game if tenzies state is true (all the dice have the same value and are held)
       if (tenzies) {
         setTenzies(false);
+        setAttempts(0); // attempts set to 0 when the game restarts
         return allNewDice();
-        // only rolls the dice which are not held
       } else {
+        // increase the number of attempts
+        setAttempts((prevAttempt) => (prevAttempt += 1));
+        // only rolls the dice which are not held
         return oldDice.map((die) => (die.isHeld ? die : generateDie()));
       }
     });
   }
+
+  console.log(attempts);
 
   function holdDie(id) {
     setDice((oldDice) =>
@@ -66,6 +72,8 @@ export default function App() {
     );
   });
 
+  const styles = { backgroundColor: tenzies ? "#e83a14" : "#008e89" };
+
   return (
     <div className="container">
       {tenzies && <Confetti />}
@@ -75,7 +83,10 @@ export default function App() {
         current value between rolls.
       </p>
       <div className="dice-container">{diceElements}</div>
-      <button onClick={rollDice}>{tenzies ? "New Game" : "Roll"}</button>
+      <button onClick={rollDice} style={styles}>
+        {tenzies ? "New Game" : "Roll"}
+      </button>
+      <p>Number of Attempts: {attempts}</p>
     </div>
   );
 }
