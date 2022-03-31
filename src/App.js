@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React from "react";
 import Die from "./components/Die";
 import { nanoid } from "nanoid";
@@ -6,7 +7,7 @@ import Confetti from "react-confetti";
 export default function App() {
   const [dice, setDice] = React.useState(allNewDice());
   const [tenzies, setTenzies] = React.useState(false);
-  const [attempts, setAttempts] = React.useState(0);
+  const [stats, setStats] = React.useState(generateStats());
 
   // generates 1 random die
   function generateDie() {
@@ -14,6 +15,14 @@ export default function App() {
       value: Math.ceil(Math.random() * 6),
       id: nanoid(),
       isHeld: false,
+    };
+  }
+
+  // used to initialize the stats state
+  function generateStats() {
+    return {
+      seconds: 0,
+      attempts: 1,
     };
   }
 
@@ -31,18 +40,19 @@ export default function App() {
       // starts a new game if tenzies state is true (all the dice have the same value and are held)
       if (tenzies) {
         setTenzies(false);
-        setAttempts(0); // attempts set to 0 when the game restarts
+        setStats(generateStats()); // set stats to the initial state
         return allNewDice();
       } else {
         // increase the number of attempts
-        setAttempts((prevAttempt) => (prevAttempt += 1));
+        setStats((prevStats) => ({
+          ...prevStats,
+          attempts: (prevStats.attempts += 1),
+        }));
         // only rolls the dice which are not held
         return oldDice.map((die) => (die.isHeld ? die : generateDie()));
       }
     });
   }
-
-  console.log(attempts);
 
   function holdDie(id) {
     setDice((oldDice) =>
@@ -61,6 +71,21 @@ export default function App() {
     }
   }, [dice]);
 
+  React.useEffect(() => {
+    let timerInterval;
+    if (!tenzies) {
+      timerInterval = setInterval(() => {
+        setStats((prevStats) => ({
+          ...prevStats,
+          seconds: (prevStats.seconds += 1),
+        }));
+      }, 1000);
+    } else if (tenzies && stats.seconds !== 0) {
+      clearInterval(timerInterval);
+    }
+    return () => clearInterval(timerInterval);
+  }, [stats, tenzies]);
+
   const diceElements = dice.map((die) => {
     return (
       <Die
@@ -74,6 +99,11 @@ export default function App() {
 
   const styles = { backgroundColor: tenzies ? "#e83a14" : "#008e89" };
 
+  const minutes = Math.floor(stats.seconds / 60);
+  const seconds = stats.seconds - minutes * 60;
+  const timePassed =
+    seconds < 10 ? `${minutes}:0${seconds}` : `${minutes}:${seconds}`;
+
   return (
     <div className="container">
       {tenzies && <Confetti />}
@@ -86,7 +116,14 @@ export default function App() {
       <button onClick={rollDice} style={styles}>
         {tenzies ? "New Game" : "Roll"}
       </button>
-      <p>Number of Attempts: {attempts}</p>
+      <div className="statsContainer">
+        <p className="attempts">
+          Number of Attempts: <span className="stats">{stats.attempts}</span>
+        </p>
+        <p>
+          Time <span className="stats">{timePassed}</span>
+        </p>
+      </div>
     </div>
   );
 }

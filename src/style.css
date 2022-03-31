@@ -10,6 +10,7 @@ body {
   align-items: center;
   height: 100vh;
   font-family: "Karla", sans-serif;
+  color: #2b293a;
 }
 
 .container {
@@ -24,9 +25,7 @@ body {
 }
 
 .title {
-  margin-top: -20px;
-  margin-bottom: 5px;
-  color: #2b283a;
+  margin: 10px;
   font-size: 26px;
 }
 
@@ -67,4 +66,20 @@ button:focus {
 
 button:active {
   box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
+}
+
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+}
+
+.attempts {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+.stats {
+  font-size: 1.2em;
 }
