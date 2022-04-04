@@ -5,11 +5,19 @@
   font-size: 14px;
 }
 
-.attempts {
-  margin-top: 24px;
-  margin-bottom: 0;
+.timeContainer {
+  position: absolute;
+  top: 125px;
 }
 
-.stats {
+.timePassed {
   font-size: 1.2em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.bestTime {
+  color: orange;
+  font-size: 1.2em;
+  margin-top: 0;
 }

@@ -9,6 +9,11 @@ export default function App() {
   const [dice, setDice] = React.useState(allNewDice());
   const [tenzies, setTenzies] = React.useState(false);
   const [stats, setStats] = React.useState(generateStats());
+  const [bestTime, setBestTime] = React.useState(() =>
+    localStorage.getItem("bestTime")
+      ? JSON.parse(localStorage.getItem("bestTime"))
+      : null
+  );
 
   // generates 1 random die
   function generateDie() {
@@ -68,9 +73,19 @@ export default function App() {
   React.useEffect(() => {
     // check if all the dice are held and have the same value
     if (dice.every((die) => die.isHeld && die.value === dice[0].value)) {
-      return setTenzies(true);
+      setTenzies(true);
+
+      if (
+        // check if there is a new best time or if there isn't local storage yet
+        stats.seconds < localStorage.getItem("bestTime") ||
+        !localStorage.getItem("bestTime")
+      ) {
+        // save the new best time state and create / update local storage
+        setBestTime(stats.seconds);
+        localStorage.setItem("bestTime", JSON.stringify(stats.seconds));
+      }
     }
-  }, [dice]);
+  }, [dice, bestTime, stats.seconds]);
 
   React.useEffect(() => {
     let timerInterval;
@@ -112,7 +127,7 @@ export default function App() {
       <button onClick={rollDice} style={styles}>
         {tenzies ? "New Game" : "Roll"}
       </button>
-      <Stats stats={stats} />
+      <Stats stats={stats} bestTime={bestTime} />
     </div>
   );
 }
