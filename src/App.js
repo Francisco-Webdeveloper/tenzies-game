@@ -1,6 +1,7 @@
 /* eslint-disable no-unreachable */
 import React from "react";
 import Die from "./components/Die";
+import Stats from "./components/Stats";
 import { nanoid } from "nanoid";
 import Confetti from "react-confetti";
 
@@ -99,11 +100,6 @@ export default function App() {
 
   const styles = { backgroundColor: tenzies ? "#e83a14" : "#008e89" };
 
-  const minutes = Math.floor(stats.seconds / 60);
-  const seconds = stats.seconds - minutes * 60;
-  const timePassed =
-    seconds < 10 ? `${minutes}:0${seconds}` : `${minutes}:${seconds}`;
-
   return (
     <div className="container">
       {tenzies && <Confetti />}
@@ -116,14 +112,7 @@ export default function App() {
       <button onClick={rollDice} style={styles}>
         {tenzies ? "New Game" : "Roll"}
       </button>
-      <div className="statsContainer">
-        <p className="attempts">
-          Number of Attempts: <span className="stats">{stats.attempts}</span>
-        </p>
-        <p>
-          Time <span className="stats">{timePassed}</span>
-        </p>
-      </div>
+      <Stats stats={stats} />
     </div>
   );
 }

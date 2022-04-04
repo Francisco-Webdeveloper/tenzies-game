@@ -1,0 +1,15 @@
+.statsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+}
+
+.attempts {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+
+.stats {
+  font-size: 1.2em;
+}
