@@ -100,7 +100,7 @@ export default function App() {
       clearInterval(timerInterval);
     }
     return () => clearInterval(timerInterval);
-  }, [stats, tenzies]);
+  }, [stats.seconds, tenzies]);
 
   const diceElements = dice.map((die) => {
     return (
