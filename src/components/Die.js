@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from "react";
 import classes from "./Die.module.css";
 
@@ -6,7 +7,9 @@ export default function Die(props) {
 
   return (
     <div className={classes.dieFace} style={styles} onClick={props.holdDie}>
-      <h2>{props.value}</h2>
+      {[...Array(props.value)].map((el, index) => (
+        <span key={index} className={classes.dieDot}></span>
+      ))}
     </div>
   );
 }
